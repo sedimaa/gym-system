@@ -8,7 +8,6 @@ use App\Models\Payment;
 use App\Models\Plan;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Validator;
 
 class StorePaymentRequest extends FormRequest
 {

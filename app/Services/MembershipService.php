@@ -151,7 +151,9 @@ class MembershipService
 
         return DB::transaction(function () use ($member, $plan, $data, $receivedBy) {
             $paidOn = CarbonImmutable::parse($data['paid_on'] ?? today())->startOfDay();
-            $previous = $member->currentMembership()->lockForUpdate()->first();
+            // Lock the member row so two payments for the same member can't interleave.
+            Member::whereKey($member->id)->lockForUpdate()->first();
+            $previous = $member->currentMembership()->first();
 
             $start = $this->startDateFor($previous, $plan, $paidOn);
 

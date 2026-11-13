@@ -8,12 +8,14 @@ use App\Models\Member;
 use App\Models\Payment;
 use App\Models\Plan;
 use App\Services\MembershipService;
+use App\Support\Branding;
+use App\Support\Settings;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class PaymentController extends Controller
@@ -110,8 +112,8 @@ class PaymentController extends Controller
 
         return Pdf::loadView('payments.receipt', [
             'payment' => $payment,
-            'settings' => app(\App\Support\Settings::class)->all(),
-            'logoDataUri' => \App\Support\Branding::logoDataUri(),
+            'settings' => app(Settings::class)->all(),
+            'logoDataUri' => Branding::logoDataUri(),
         ])
             ->setPaper([0, 0, 226.77, 600]) // 80 mm x ~212 mm in points
             ->stream("receipt-{$payment->receipt_no}.pdf");

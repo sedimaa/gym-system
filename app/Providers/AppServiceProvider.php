@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
-use App\Support\Money;
+use App\Support\Settings;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        $this->app->singleton(\App\Support\Settings::class);
+        $this->app->singleton(Settings::class);
     }
 
     public function boot(): void

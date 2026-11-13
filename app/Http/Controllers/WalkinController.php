@@ -6,6 +6,7 @@ use App\Enums\PaymentMethod;
 use App\Http\Requests\StoreWalkinRequest;
 use App\Models\Walkin;
 use App\Services\WalkinService;
+use App\Support\Money;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -38,7 +39,7 @@ class WalkinController extends Controller
         $walkin = $this->walkins->record($request->validated(), $request->user());
 
         return redirect()->route('walkins.index')
-            ->with('success', "Walk-in recorded: {$walkin->displayName()}, ".\App\Support\Money::peso($walkin->amount).'.');
+            ->with('success', "Walk-in recorded: {$walkin->displayName()}, ".Money::peso($walkin->amount).'.');
     }
 
     public function destroy(Walkin $walkin): RedirectResponse

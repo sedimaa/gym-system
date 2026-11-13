@@ -88,9 +88,11 @@
                             @endforelse
                         </div>
                         <p class="form-help mt-3">
-                            Renewing the same plan
-                            {{ $renewalMode === 'from_old_expiry' ? 'starts the day after the current expiry (if it hasn\'t passed yet).' : 'starts on the payment date.' }}
-                            Changing to a different plan starts on the payment date.
+                            @if ($renewalMode === 'from_old_expiry')
+                                Renewing the same plan continues the day after the current expiry (if it hasn't passed yet). Changing to a different plan starts on the payment date.
+                            @else
+                                The new period starts on the payment date.
+                            @endif
                         </p>
                     </div>
                 </div>

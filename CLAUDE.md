@@ -99,6 +99,23 @@ Do not invent extra features. Ask the user before any major decision not covered
   disabled (`users.is_active`), never deleted, and an admin can't disable or demote themselves.
 - Fonts: system font stack (no web fonts), to stay offline-first.
 
+## Decisions made during the build (change if the owner disagrees)
+- Extra status **"No plan yet"** (`none`) for members who registered but never paid.
+- "Expiring soon" also covers the grace period after expiry (still allowed in, shown in amber).
+- Member payments: amount defaults to the plan price but can be changed (discounts); the receipt and
+  activity log show it. Staff payments are always dated today; only the admin can backdate.
+- Day passes are only sold as walk-ins, never as a member plan. Deactivated members can't pay or
+  check in until the admin reactivates them.
+- Deleting (admin): only a member's **latest** payment, which also removes the period it created;
+  members only if they have no payments or attendance (otherwise deactivate); plans only if never sold.
+- Attendance: one check-in per member per day. Overrides and admin-added records never use a
+  per-session bundle session; deleting a check-in gives its session back.
+- Reports are open to both roles (they are not on the admin-only list); gate `view-reports` in
+  `AppServiceProvider` makes them admin-only with a one-line change. The activity log page is admin-only.
+- Backups: database + uploaded logo. The daily backup runs hourly but only once per day
+  (`gym:backup --if-missing-today`). Restore extracts the dump, makes a safety backup, then replaces
+  the database and logs everyone out.
+
 ## Data model
 Tables: `users` (with `role`), `members`, `plans`, `memberships`, `payments`, `walkins`,
 `attendance`, `settings` (key/value), `activity_logs`.

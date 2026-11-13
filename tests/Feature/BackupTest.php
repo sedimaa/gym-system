@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Spatie\Activitylog\Models\Activity;
+use Symfony\Component\Process\ExecutableFinder;
 use Tests\TestCase;
 
 /**
@@ -25,7 +26,7 @@ class BackupTest extends TestCase
     {
         parent::setUp();
 
-        if (! (new \Symfony\Component\Process\ExecutableFinder)->find('sqlite3')) {
+        if (! (new ExecutableFinder)->find('sqlite3')) {
             $this->markTestSkipped('sqlite3 command-line tool not installed.');
         }
 

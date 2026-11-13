@@ -17,8 +17,8 @@
                  class="fixed inset-0 z-30 bg-gray-900/50 lg:hidden" @click="sidebarOpen = false"></div>
 
             {{-- Sidebar: always visible on desktop (front desk), slide-in on phones --}}
-            <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-                   class="fixed inset-y-0 left-0 z-40 w-64 transform bg-slate-900 text-slate-100 transition-transform duration-200 lg:translate-x-0">
+            <aside :class="{ '!translate-x-0': sidebarOpen }"
+                   class="fixed inset-y-0 left-0 z-40 w-64 -translate-x-full transform bg-slate-900 text-slate-100 transition-transform duration-200 lg:translate-x-0">
                 @include('layouts.navigation')
             </aside>
 
