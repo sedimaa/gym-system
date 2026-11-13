@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\MembershipStatus;
 use App\Http\Requests\DeactivateMemberRequest;
 use App\Http\Requests\MemberRequest;
 use App\Models\Member;
+use App\Services\MembershipService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -12,26 +14,43 @@ use Illuminate\View\View;
 
 class MemberController extends Controller
 {
+    public function __construct(private readonly MembershipService $memberships) {}
+
     public function index(Request $request): View
     {
         Gate::authorize('viewAny', Member::class);
 
+        $statusOptions = [
+            'current' => 'All current members',
+            MembershipStatus::Active->value => 'Active',
+            MembershipStatus::Expiring->value => 'Expiring soon',
+            MembershipStatus::Expired->value => 'Expired',
+            MembershipStatus::None->value => 'No plan yet',
+            MembershipStatus::Inactive->value => 'Deactivated',
+            'all' => 'Everyone (incl. deactivated)',
+        ];
+
         $filters = $request->validate([
             'q' => ['nullable', 'string', 'max:100'],
-            'status' => ['nullable', 'in:all,active,inactive'],
+            'status' => ['nullable', 'in:'.implode(',', array_keys($statusOptions))],
         ]);
-        $status = $filters['status'] ?? 'active';
+        $status = $filters['status'] ?? 'current';
 
-        $members = Member::query()
-            ->search($filters['q'] ?? null)
-            ->when($status === 'active', fn ($q) => $q->where('is_active', true))
-            ->when($status === 'inactive', fn ($q) => $q->where('is_active', false))
-            ->orderBy('last_name')->orderBy('first_name')
-            ->paginate(20)
-            ->withQueryString();
+        $query = Member::query()->search($filters['q'] ?? null)->with('currentMembership.plan');
+
+        match ($status) {
+            'all' => null,
+            'current' => $query->where('is_active', true),
+            default => $this->memberships->scopeToStatus($query, MembershipStatus::from($status)),
+        };
+
+        $members = $query->orderBy('last_name')->orderBy('first_name')->paginate(20)->withQueryString();
 
         return view('members.index', [
             'members' => $members,
+            'statuses' => $members->getCollection()->mapWithKeys(fn (Member $m) => [$m->id => $this->memberships->status($m)]),
+            'showMembershipColumns' => true,
+            'statusOptions' => $statusOptions,
             'q' => $filters['q'] ?? '',
             'status' => $status,
         ]);
@@ -56,7 +75,13 @@ class MemberController extends Controller
     {
         Gate::authorize('view', $member);
 
-        return view('members.show', ['member' => $member]);
+        $member->load(['currentMembership.plan', 'memberships' => fn ($q) => $q->with(['plan', 'payment'])->latest('id')]);
+
+        return view('members.show', [
+            'member' => $member,
+            'status' => $this->memberships->status($member),
+            'payments' => $member->payments()->with(['plan', 'receiver'])->latest('paid_on')->latest('id')->limit(50)->get(),
+        ]);
     }
 
     public function edit(Member $member): View

@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\ExpiryController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StaffAccountController;
@@ -19,6 +21,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('members', MemberController::class);
     Route::patch('/members/{member}/deactivate', [MemberController::class, 'deactivate'])->name('members.deactivate');
     Route::patch('/members/{member}/reactivate', [MemberController::class, 'reactivate'])->name('members.reactivate');
+
+    // Payments: create a membership period; delete is admin-only (PaymentPolicy)
+    Route::get('/payments/{payment}/receipt', [PaymentController::class, 'receipt'])->name('payments.receipt');
+    Route::resource('payments', PaymentController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+
+    Route::get('/expiry', ExpiryController::class)->name('expiry.index');
 
     // Admin only (enforced by policies)
     Route::resource('plans', PlanController::class)->except('show');

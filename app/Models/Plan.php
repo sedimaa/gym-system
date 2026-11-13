@@ -6,6 +6,7 @@ use App\Enums\PlanType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -24,6 +25,11 @@ class Plan extends Model
             'session_count' => 'integer',
             'is_active' => 'boolean',
         ];
+    }
+
+    public function memberships(): HasMany
+    {
+        return $this->hasMany(Membership::class);
     }
 
     public function scopeActive(Builder $query): void
@@ -56,7 +62,7 @@ class Plan extends Model
     /** A plan that has been sold can't be deleted (history would break); deactivate it instead. */
     public function isInUse(): bool
     {
-        return false; // nothing sells plans yet; memberships (Module 4) and walk-ins (Module 5) extend this
+        return $this->memberships()->exists(); // walk-ins are added in Module 5
     }
 
     public function durationLabel(): string

@@ -26,7 +26,13 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
-                @stack('member-actions')
+                @if ($member->is_active)
+                    @can('create', App\Models\Payment::class)
+                        <a href="{{ route('payments.create', ['member' => $member->id]) }}" class="btn-success">
+                            {{ $member->currentMembership ? 'Renew / pay' : 'Record first payment' }}
+                        </a>
+                    @endcan
+                @endif
                 @can('update', $member)
                     <a href="{{ route('members.edit', $member) }}" class="btn-secondary">Edit details</a>
                 @endcan
@@ -90,7 +96,9 @@
         </div>
 
         <div class="space-y-6 xl:col-span-2">
-            @stack('member-sections')
+            @include('members.partials.membership')
+            @includeIf('members.partials.attendance')
+            @include('members.partials.payments')
         </div>
     </div>
 

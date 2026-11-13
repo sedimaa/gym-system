@@ -22,11 +22,12 @@ class AppServiceProvider extends ServiceProvider
         'deactivate-members',
         'delete-records',      // delete any record
         'correct-attendance',  // add/correct attendance records (with note)
+        'backdate-payments',   // enter a payment with an earlier date (encoding old records)
     ];
 
     public function register(): void
     {
-        //
+        $this->app->singleton(\App\Support\Settings::class);
     }
 
     public function boot(): void

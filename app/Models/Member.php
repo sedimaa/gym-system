@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -63,6 +65,22 @@ class Member extends Model
         return Attribute::get(fn () => mb_strtoupper(mb_substr($this->first_name, 0, 1).mb_substr($this->last_name, 0, 1)));
     }
 
+    public function memberships(): HasMany
+    {
+        return $this->hasMany(Membership::class);
+    }
+
+    /** The latest paid period; status is computed from it (see MembershipService). */
+    public function currentMembership(): HasOne
+    {
+        return $this->hasOne(Membership::class)->latestOfMany();
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     public function age(): ?int
     {
         return $this->birthdate?->age;
@@ -90,7 +108,7 @@ class Member extends Model
     /** True once the member has payments or attendance; such members are deactivated, not deleted. */
     public function hasHistory(): bool
     {
-        return false; // payments (Module 4) and attendance (Module 6) extend this
+        return $this->payments()->exists(); // attendance is added in Module 6
     }
 
     public function getActivitylogOptions(): LogOptions

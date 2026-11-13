@@ -19,7 +19,7 @@
                 </select>
             </div>
             <button type="submit" class="btn-secondary">Search</button>
-            @if ($q !== '' || $status !== 'active')
+            @if ($q !== '' || $status !== 'current')
                 <a href="{{ route('members.index') }}" class="self-center text-sm text-gray-600 hover:text-gray-900">Clear</a>
             @endif
         </form>
