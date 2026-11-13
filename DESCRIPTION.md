@@ -1,4 +1,4 @@
-# CLAUDE.md: Gym Management System
+# DESCRIPTION.md: Gym Management System
 
 A gym management system for a small local gym in our barangay (Philippines).
 The first build is a **working mock-up with realistic seeded data** for an owner demo. It is real,
