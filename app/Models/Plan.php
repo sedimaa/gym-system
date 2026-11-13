@@ -32,6 +32,11 @@ class Plan extends Model
         return $this->hasMany(Membership::class);
     }
 
+    public function walkins(): HasMany
+    {
+        return $this->hasMany(Walkin::class);
+    }
+
     public function scopeActive(Builder $query): void
     {
         $query->where('is_active', true);
@@ -62,7 +67,7 @@ class Plan extends Model
     /** A plan that has been sold can't be deleted (history would break); deactivate it instead. */
     public function isInUse(): bool
     {
-        return $this->memberships()->exists(); // walk-ins are added in Module 5
+        return $this->memberships()->exists() || $this->walkins()->exists();
     }
 
     public function durationLabel(): string

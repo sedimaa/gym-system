@@ -6,6 +6,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StaffAccountController;
+use App\Http\Controllers\WalkinController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard');
@@ -27,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('payments', PaymentController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
 
     Route::get('/expiry', ExpiryController::class)->name('expiry.index');
+
+    Route::resource('walkins', WalkinController::class)->only(['index', 'store', 'destroy']);
 
     // Admin only (enforced by policies)
     Route::resource('plans', PlanController::class)->except('show');
