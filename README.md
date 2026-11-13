@@ -1,7 +1,7 @@
 # Gym Management System
 
 A gym management system for a small local gym in our barangay. Laravel 13, MySQL, Blade + Tailwind,
-built to run offline on the gym PC (Laragon on Windows). The full spec is in [`CLAUDE.md`](CLAUDE.md).
+built to run offline on the gym PC (Laragon on Windows). The full spec is in [`DESCRIPTION.md`](DESCRIPTION.md).
 
 ## Build progress
 
