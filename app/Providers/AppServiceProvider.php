@@ -36,6 +36,10 @@ class AppServiceProvider extends ServiceProvider
             Gate::define($ability, fn (User $user) => $user->isAdmin());
         }
 
+        // Reports are not on the admin-only list in CLAUDE.md, so both roles can open them.
+        // To make them admin-only, change this to: fn (User $user) => $user->isAdmin()
+        Gate::define('view-reports', fn (User $user) => true);
+
         // @peso($amount) -> ₱1,234.00
         Blade::directive('peso', fn (string $expression) => "<?php echo e(\\App\\Support\\Money::peso($expression)); ?>");
     }

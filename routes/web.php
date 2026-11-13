@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpiryController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StaffAccountController;
 use App\Http\Controllers\WalkinController;
 use Illuminate\Support\Facades\Route;
@@ -13,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     // Own profile (name, e-mail, password). Accounts are never self-deleted.
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -35,6 +37,9 @@ Route::middleware('auth')->group(function () {
     // Attendance: check-in for staff and admin; add/correct/delete records is admin-only (AttendancePolicy)
     Route::post('/attendance/records', [AttendanceController::class, 'storeRecord'])->name('attendance.records.store');
     Route::resource('attendance', AttendanceController::class)->except('show')->parameters(['attendance' => 'attendance']);
+
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/export/{format}', [ReportController::class, 'export'])->name('reports.export');
 
     // Admin only (enforced by policies)
     Route::resource('plans', PlanController::class)->except('show');

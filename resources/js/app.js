@@ -1,4 +1,4 @@
-
+import './charts';
 
 import Alpine from 'alpinejs';
 
