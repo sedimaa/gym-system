@@ -59,6 +59,13 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
+            // Used by backups: folder containing mysqldump/mysql when they aren't on the PATH,
+            // e.g. C:\\laragon\\bin\\mysql\\mysql-8.4.3-winx64\\bin
+            'dump' => [
+                'dump_binary_path' => env('DB_DUMP_BINARY_PATH', ''),
+                'use_single_transaction' => true,
+                'timeout' => 300,
+            ],
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],

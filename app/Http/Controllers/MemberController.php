@@ -60,7 +60,7 @@ class MemberController extends Controller
     {
         Gate::authorize('create', Member::class);
 
-        return view('members.create', ['member' => new Member(['joined_on' => today()])]);
+        return view('members.create', ['member' => new Member(['joined_on' => today()]), 'gymRules' => setting('gym_rules')]);
     }
 
     public function store(MemberRequest $request): RedirectResponse

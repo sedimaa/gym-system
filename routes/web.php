@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpiryController;
 use App\Http\Controllers\MemberController;
@@ -8,11 +10,15 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StaffAccountController;
 use App\Http\Controllers\WalkinController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard');
+
+// Gym logo (shown on the login page too, so no login needed)
+Route::get('/branding/logo', [SettingsController::class, 'logo'])->name('branding.logo');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
@@ -43,6 +49,17 @@ Route::middleware('auth')->group(function () {
 
     // Admin only (enforced by policies)
     Route::resource('plans', PlanController::class)->except('show');
+
+    Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
+    Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
+
+    Route::get('/backups', [BackupController::class, 'index'])->name('backups.index');
+    Route::post('/backups', [BackupController::class, 'store'])->name('backups.store');
+    Route::post('/backups/restore', [BackupController::class, 'restore'])->name('backups.restore');
+    Route::get('/backups/{file}/download', [BackupController::class, 'download'])->name('backups.download');
+    Route::delete('/backups/{file}', [BackupController::class, 'destroy'])->name('backups.destroy');
+
+    Route::get('/activity-log', ActivityLogController::class)->name('activity-log.index');
 
     Route::get('/staff-accounts', [StaffAccountController::class, 'index'])->name('staff-accounts.index');
     Route::get('/staff-accounts/create', [StaffAccountController::class, 'create'])->name('staff-accounts.create');

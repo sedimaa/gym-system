@@ -108,7 +108,11 @@ class PaymentController extends Controller
 
         $payment->load(['member', 'plan', 'membership', 'receiver']);
 
-        return Pdf::loadView('payments.receipt', ['payment' => $payment, 'settings' => app(\App\Support\Settings::class)->all()])
+        return Pdf::loadView('payments.receipt', [
+            'payment' => $payment,
+            'settings' => app(\App\Support\Settings::class)->all(),
+            'logoDataUri' => \App\Support\Branding::logoDataUri(),
+        ])
             ->setPaper([0, 0, 226.77, 600]) // 80 mm x ~212 mm in points
             ->stream("receipt-{$payment->receipt_no}.pdf");
     }

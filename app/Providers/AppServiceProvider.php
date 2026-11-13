@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
         'delete-records',      // delete any record
         'correct-attendance',  // add/correct attendance records (with note)
         'backdate-payments',   // enter a payment with an earlier date (encoding old records)
+        'view-activity-log',   // who did what, when
     ];
 
     public function register(): void

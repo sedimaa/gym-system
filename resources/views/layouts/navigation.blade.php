@@ -18,14 +18,19 @@
             ['label' => 'Staff accounts', 'route' => 'staff-accounts.index', 'active' => 'staff-accounts.*', 'can' => ['viewAny', \App\Models\User::class], 'icon' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'],
             ['label' => 'Settings',       'route' => 'settings.edit',        'active' => 'settings.*',       'can' => ['manage-settings'],                    'icon' => 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065zM15 12a3 3 0 11-6 0 3 3 0 016 0z'],
             ['label' => 'Backups',        'route' => 'backups.index',        'active' => 'backups.*',        'can' => ['manage-backups'],                     'icon' => 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4'],
+            ['label' => 'Activity log',   'route' => 'activity-log.index',   'active' => 'activity-log.*',   'can' => ['view-activity-log'],                  'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'],
         ],
     ];
 @endphp
 
 <div class="flex h-full flex-col">
     <a href="{{ route('dashboard') }}" class="flex h-16 items-center gap-3 border-b border-slate-800 px-5">
-        <x-application-logo class="h-8 w-8 text-amber-400" />
-        <span class="text-sm font-semibold leading-tight tracking-tight">{{ config('app.name') }}</span>
+        @if (App\Support\Branding::logoPath())
+            <img src="{{ route('branding.logo') }}?v={{ urlencode(setting('gym_logo')) }}" alt="" class="h-9 w-9 rounded bg-white object-contain p-0.5">
+        @else
+            <x-application-logo class="h-8 w-8 text-amber-400" />
+        @endif
+        <span class="text-sm font-semibold leading-tight tracking-tight">{{ setting('gym_name') }}</span>
     </a>
 
     <nav class="flex-1 space-y-6 overflow-y-auto px-3 py-5">

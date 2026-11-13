@@ -38,6 +38,14 @@ return [
             'report' => false,
         ],
 
+        // Backup location; the root is replaced at runtime by the backup_path setting.
+        'backups' => [
+            'driver' => 'local',
+            'root' => storage_path('app/backups'),
+            'throw' => true,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
