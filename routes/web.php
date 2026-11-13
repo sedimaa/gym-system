@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StaffAccountController;
@@ -13,6 +14,11 @@ Route::middleware('auth')->group(function () {
     // Own profile (name, e-mail, password). Accounts are never self-deleted.
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Members: staff and admin; deactivate/delete are admin-only (MemberPolicy)
+    Route::resource('members', MemberController::class);
+    Route::patch('/members/{member}/deactivate', [MemberController::class, 'deactivate'])->name('members.deactivate');
+    Route::patch('/members/{member}/reactivate', [MemberController::class, 'reactivate'])->name('members.reactivate');
 
     // Admin only (enforced by policies)
     Route::resource('plans', PlanController::class)->except('show');
