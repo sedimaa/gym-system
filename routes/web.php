@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StaffAccountController;
 use Illuminate\Support\Facades\Route;
@@ -13,7 +14,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    // Admin only (enforced by UserPolicy)
+    // Admin only (enforced by policies)
+    Route::resource('plans', PlanController::class)->except('show');
+
     Route::get('/staff-accounts', [StaffAccountController::class, 'index'])->name('staff-accounts.index');
     Route::get('/staff-accounts/create', [StaffAccountController::class, 'create'])->name('staff-accounts.create');
     Route::post('/staff-accounts', [StaffAccountController::class, 'store'])->name('staff-accounts.store');
