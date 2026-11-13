@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 /**
- * Front-desk check-in (CLAUDE.md → Attendance):
+ * Front-desk check-in (DESCRIPTION.md → Attendance):
  *  - date and time always come from the server clock
  *  - members whose status allows it are checked in (status "allowed"); a per-session bundle uses one session
  *  - otherwise staff either deny (logged "denied") or override with a required note (logged "manual")

@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 /**
- * All membership rules live here (CLAUDE.md → Business rules):
+ * All membership rules live here (DESCRIPTION.md → Business rules):
  *  - status is computed from the current (latest) membership, never stored
  *  - expiry date = start date + plan duration_days
  *  - renewal start follows the renewal_start_mode setting; plan changes start on the payment date

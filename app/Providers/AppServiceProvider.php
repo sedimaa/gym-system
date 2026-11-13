@@ -11,7 +11,7 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Admin-only abilities from the role matrix in CLAUDE.md.
+     * Admin-only abilities from the role matrix in DESCRIPTION.md.
      * Staff can do everything else (members, payments, walk-ins, attendance).
      * Staff account management is handled by App\Policies\UserPolicy.
      */
@@ -37,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
             Gate::define($ability, fn (User $user) => $user->isAdmin());
         }
 
-        // Reports are not on the admin-only list in CLAUDE.md, so both roles can open them.
+        // Reports are not on the admin-only list in DESCRIPTION.md, so both roles can open them.
         // To make them admin-only, change this to: fn (User $user) => $user->isAdmin()
         Gate::define('view-reports', fn (User $user) => true);
 
