@@ -81,6 +81,11 @@ class Member extends Model
         return $this->hasMany(Payment::class);
     }
 
+    public function attendance(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
     public function age(): ?int
     {
         return $this->birthdate?->age;
@@ -108,7 +113,7 @@ class Member extends Model
     /** True once the member has payments or attendance; such members are deactivated, not deleted. */
     public function hasHistory(): bool
     {
-        return $this->payments()->exists(); // attendance is added in Module 6
+        return $this->payments()->exists() || $this->attendance()->exists();
     }
 
     public function getActivitylogOptions(): LogOptions

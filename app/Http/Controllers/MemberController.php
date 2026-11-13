@@ -81,6 +81,8 @@ class MemberController extends Controller
             'member' => $member,
             'status' => $this->memberships->status($member),
             'payments' => $member->payments()->with(['plan', 'receiver'])->latest('paid_on')->latest('id')->limit(50)->get(),
+            'recentAttendance' => $member->attendance()->with('recorder')->latest('checked_in_at')->limit(15)->get(),
+            'visitsThisMonth' => $member->attendance()->visits()->betweenDates(today()->startOfMonth()->toDateString(), today()->toDateString())->count(),
         ]);
     }
 

@@ -26,6 +26,7 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
+                <a href="{{ route('attendance.index', ['member' => $member->id]) }}" class="btn-secondary">Check in</a>
                 @if ($member->is_active)
                     @can('create', App\Models\Payment::class)
                         <a href="{{ route('payments.create', ['member' => $member->id]) }}" class="btn-success">
@@ -97,7 +98,7 @@
 
         <div class="space-y-6 xl:col-span-2">
             @include('members.partials.membership')
-            @includeIf('members.partials.attendance')
+            @include('members.partials.attendance')
             @include('members.partials.payments')
         </div>
     </div>

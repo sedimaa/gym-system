@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ExpiryController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PaymentController;
@@ -30,6 +31,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/expiry', ExpiryController::class)->name('expiry.index');
 
     Route::resource('walkins', WalkinController::class)->only(['index', 'store', 'destroy']);
+
+    // Attendance: check-in for staff and admin; add/correct/delete records is admin-only (AttendancePolicy)
+    Route::post('/attendance/records', [AttendanceController::class, 'storeRecord'])->name('attendance.records.store');
+    Route::resource('attendance', AttendanceController::class)->except('show')->parameters(['attendance' => 'attendance']);
 
     // Admin only (enforced by policies)
     Route::resource('plans', PlanController::class)->except('show');
